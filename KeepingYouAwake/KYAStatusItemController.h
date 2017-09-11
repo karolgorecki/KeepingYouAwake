@@ -15,8 +15,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface KYAStatusItemController : NSObject
 @property (nonatomic, readonly) NSStatusItem *systemStatusItem;
 @property (weak, nonatomic, nullable) id<KYAStatusItemControllerDelegate> delegate;
+@property (nonatomic, getter=isActiveAppearanceEnabled) BOOL activeAppearanceEnabled;
 
 - (instancetype)init NS_DESIGNATED_INITIALIZER;
+
+- (void)showMenu:(NSMenu *)menu;
 
 @end
 

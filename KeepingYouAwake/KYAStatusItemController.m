@@ -26,6 +26,8 @@
     return self;
 }
 
+#pragma mark - Configuration
+
 - (void)configureStatusItem
 {
     NSStatusItem *statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
@@ -38,26 +40,7 @@
     button.action = @selector(toggleStatus:);
     
     self.systemStatusItem = statusItem;
-    [self setStatusItemActive:NO];
-}
-
-- (void)setStatusItemActive:(BOOL)active
-{
-    NSStatusBarButton *button = self.systemStatusItem.button;
-    KYAMenuBarIcon *menubarIcon = [KYAMenuBarIcon currentIcon];
-    
-    if(active)
-    {
-        button.image = menubarIcon.activeIcon;
-        button.toolTip = NSLocalizedString(@"Click to allow sleep\nRight click to show menu",
-                                           @"Click to allow sleep\nRight click to show menu");
-    }
-    else
-    {
-        button.image = menubarIcon.inactiveIcon;
-        button.toolTip = NSLocalizedString(@"Click to prevent sleep\nRight click to show menu",
-                                           @"Click to prevent sleep\nRight click to show menu");
-    }
+    self.activeAppearanceEnabled = NO;
 }
 
 - (void)toggleStatus:(id)sender
@@ -80,6 +63,40 @@
     {
         [delegate statusItemControllerShouldPerformMainAction:self];
     }
+}
+
+#pragma mark - Active Appearance
+
+- (BOOL)isActiveAppearanceEnabled
+{
+    KYAMenuBarIcon *menubarIcon = [KYAMenuBarIcon currentIcon];
+    return self.systemStatusItem.image == menubarIcon.activeIcon;
+}
+
+- (void)setActiveAppearanceEnabled:(BOOL)activeAppearanceEnabled
+{
+    NSStatusBarButton *button = self.systemStatusItem.button;
+    KYAMenuBarIcon *menubarIcon = [KYAMenuBarIcon currentIcon];
+    
+    if(activeAppearanceEnabled)
+    {
+        button.image = menubarIcon.activeIcon;
+        button.toolTip = NSLocalizedString(@"Click to allow sleep\nRight click to show menu",
+                                           @"Click to allow sleep\nRight click to show menu");
+    }
+    else
+    {
+        button.image = menubarIcon.inactiveIcon;
+        button.toolTip = NSLocalizedString(@"Click to prevent sleep\nRight click to show menu",
+                                           @"Click to prevent sleep\nRight click to show menu");
+    }
+}
+
+#pragma mark - Menu
+
+- (void)showMenu:(NSMenu *)menu
+{
+    [self.systemStatusItem popUpStatusItemMenu:menu];
 }
 
 @end
